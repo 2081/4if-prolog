@@ -14,7 +14,9 @@ simple_ai(Line) :-
 	not(critical(Line)), !.	
 simple_ai(Line) :-
 	simple_ai(Line,0),!.
+
+:-assert(p1_play(L):-simple_ai(L)).
+:-assert(p2_play(L):-simple_ai(L)).
 	
-ai_play(L):- simple_ai(L).
-	
-:- consult('main_file.pl').
+:- dynamic start/0 .
+start :- consult('main_file.pl'), play.

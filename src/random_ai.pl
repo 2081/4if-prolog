@@ -9,6 +9,9 @@ random_ai(Line):-
 	random(1,N,R),
 	nth1(R,X,Line).
 	
-ai_play(Line):- random_ai(Line).
+
+:-assert(p1_play(L):-random_ai(L)).
+:-assert(p2_play(L):-random_ai(L)).
 	
-:- consult('main_file.pl').
+:- dynamic start/0 .
+start :- consult('main_file.pl'), play.
