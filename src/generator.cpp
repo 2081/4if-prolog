@@ -9,6 +9,12 @@ using namespace std;
 
 int main()
 {
+	/*
+		ICI
+		Si il y a un argument, prendre ça comme path au lieu de plateau.txt,
+		Comme ça on peut drag and drop un txt sur l'exe et ça génére le plateau.
+	*/
+
 	set<pair<double,double> > points;
 	set<pair<int,int> > centres;
 	ifstream entree;
