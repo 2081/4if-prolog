@@ -1,18 +1,20 @@
 :- dynamic ai_play/1 .
 
-ai_play(Line,Score) :-
+simple_ai(Line,Score) :-
 	free_lines(Lines),
 	element(Line,Lines,_),
 	close_count(Line,Score).
 	
-ai_play(Line) :-
-	ai_play(Line,2),!.
-ai_play(Line) :-
-	ai_play(Line,1),!.
-ai_play(Line) :-
-	ai_play(Line,0),
+simple_ai(Line) :-
+	simple_ai(Line,2),!.
+simple_ai(Line) :-
+	simple_ai(Line,1),!.
+simple_ai(Line) :-
+	simple_ai(Line,0),
 	not(critical(Line)), !.	
-ai_play(Line) :-
-	ai_play(Line,0),!.
+simple_ai(Line) :-
+	simple_ai(Line,0),!.
+	
+ai_play(L):- simple_ai(L).
 	
 :- consult('main_file.pl').
