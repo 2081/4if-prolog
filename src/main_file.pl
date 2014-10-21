@@ -115,7 +115,7 @@ print_update_player(TurnScore) :-
 	Artificial intelligence
 */
 
-:- dynamic ai_play/1 .
+%:- dynamic ai_play/1 .
 
 /*
  UI handler
@@ -151,11 +151,17 @@ draw_cases_dir([X,Y],Player, left):-
 /*
 	Plays handler
 */
+
+
+:- dynamic p1_play/1 .
+:- dynamic p2_play/1 .
+
+
 play(ai,L) :-
-	ai_play(L),write('Computer : '),write(L),write('\n').
+	p1_play(L),write('Computer : '),write(L),write('\n').
 	
 play(user,L) :-
-	ai_play(L),write('User : '),write(L),write('\n').
+	p2_play(L),write('User : '),write(L),write('\n').
 
 play :- 
 	player(Player),
