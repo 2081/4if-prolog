@@ -7,21 +7,18 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
-	/*
-		ICI
-		Si il y a un argument, prendre ça comme path au lieu de plateau.txt,
-		Comme ça on peut drag and drop un txt sur l'exe et ça génére le plateau.
-	*/
-
 	set<pair<double,double> > points;
 	set<pair<int,int> > centres;
 	ifstream entree;
 	ofstream sortie;
 	string ligneCourante;
-	entree.open("plateau.txt");
-	sortie.open("plateau.pl");
+	string nomFichier;
+	if(argc>1) nomFichier=argv[1];
+	else nomFichier="plateau.txt";
+	entree.open(nomFichier.c_str());
+	sortie.open((nomFichier.substr(0,nomFichier.find('.'))+".pl").c_str());
 	char** carte;
 	int largeurCarte,hauteurCarte;
 	string points_list="free_lines([";
@@ -32,7 +29,7 @@ int main()
 		hauteurCarte++;
 	}
 	entree.close();
-	entree.open("plateau.txt");
+	entree.open(nomFichier.c_str());
 	carte=new char*[largeurCarte];
 	for(int i=0;i<largeurCarte;i++)
 	{
@@ -80,3 +77,4 @@ int main()
 	sortie.close();
 	return 0;
 }
+
