@@ -121,23 +121,32 @@ print_update_player(TurnScore) :-
  UI handler
 */
 
-draw_cases([X,Y],Player):-
+draw_cases(_,_,0).
+draw_cases(Line,Player,1):-
+	draw_cases_dir(Line,Player,_).
+draw_cases(Line,Player,2):-
+	draw_cases_dir(Line,Player,X),
+	draw_cases_dir(Line,Player,Y),
+	X \= Y.
+
+draw_cases_dir([X,Y],Player, top):-
 	close_square([X,Y],bottom),
 	YY is Y-0.5,
 	fill_square([X,YY],Player).
-draw_cases([X,Y],Player):-
+draw_cases_dir([X,Y],Player, bottom):-
 	close_square([X,Y],top),
 	YY is Y+0.5,
 	fill_square([X,YY],Player).
-draw_cases([X,Y],Player):-
+draw_cases_dir([X,Y],Player,right):-
+	print('Hey'),
 	close_square([X,Y],left),
+	print('Ho'),
 	XX is X+0.5,
 	fill_square([XX,Y],Player).
-draw_cases([X,Y],Player):-
+draw_cases_dir([X,Y],Player, left):-
 	close_square([X,Y],right),
 	XX is X-0.5,
 	fill_square([XX,Y],Player).
-draw_cases(_,_).
 
 /*
 	Plays handler
@@ -160,7 +169,7 @@ play :-
 	assert(played(Line)),
 	update_player(Count),
 	draw_line(Line),
-	draw_cases(Line,Player),
+	draw_cases(Line,Player,Count),
 	sleep(0.05),
 	write('----------------------\n'),
 	play,
