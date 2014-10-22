@@ -96,12 +96,16 @@ screen_line([X,Y],FX,FY,LX,LY):-
 	LX is X+0.5,
 	LY is Y+1.0.
 
+<<<<<<< HEAD
 	
 %--Procedure permettant de tracer les lignes%
 %--Parametres: Pos: liste contenant les-----%
 %--coordonnees du centre de la ligne a------%
 %--a tracer---------------------------------%
 draw_line(Pos):-
+=======
+/*draw_line(Pos):-
+>>>>>>> origin/master
 	screen_line(Pos,FirstX,FirstY,SecondX,SecondY),
 	width_board(W),
 	height_board(H),
@@ -110,6 +114,7 @@ draw_line(Pos):-
 	FactorX is WW/W,
 	FactorY is HH/H,
 	send(@p,display,new(Li,line(FirstX*FactorX,FirstY*FactorY,SecondX*FactorX,SecondY*FactorY,none))),
+<<<<<<< HEAD
 	send(Li,flush).
 
 %%--Procedure permettant de dessiner un----%
@@ -118,10 +123,51 @@ draw_line(Pos):-
 %--Parametres: [X,Y]= coordonnees du point-%
 %--haut-gauche du carre a dessiner---------%
 %--------------Player= joueur actuel-------%	
+=======
+	send(Li,flush).*/
+	
+draw_line([X,Y],Player):-
+	screen_line([X,Y],FirstX,FirstY,SecondX,SecondY),
+	width_board(W),
+	height_board(H),
+	screen_w(WW),
+	screen_h(HH),
+	FactorX is WW/W,
+	FactorY is HH/H,
+	BW is  max(integer((SecondX-FirstX)*FactorX+1),5),
+	BH is  max(integer((SecondY-FirstY)*FactorY+1),5),
+	
+	BX is (X+0.75)*FactorX - BW/2,
+	BY is (Y+0.75)*FactorY - BH/2,
+	%write(BX),write(' '),write(BY),not(true),
+	send(@p,display,new(Sq,box(BW,BH)),point( BX,BY )),
+	square_color(C,Player),
+	send(Sq,fill_pattern,colour(C)),
+	send(Sq,flush).
+
+draft_line([X,Y]):-
+	screen_line([X,Y],FirstX,FirstY,SecondX,SecondY),
+	width_board(W),
+	height_board(H),
+	screen_w(WW),
+	screen_h(HH),
+	FactorX is WW/W,
+	FactorY is HH/H,
+	BW is  max(integer((SecondX-FirstX)*FactorX+1),5),
+	BH is  max(integer((SecondY-FirstY)*FactorY+1),5),
+	
+	BX is (X+0.75)*FactorX - BW/2,
+	BY is (Y+0.75)*FactorY - BH/2,
+	%write(BX),write(' '),write(BY),not(true),
+	send(@p,display,new(Sq,box(BW,BH)),point( BX,BY )),
+	send(Sq,fill_pattern,colour(gray)),
+	send(Sq,flush).
+	
+>>>>>>> origin/master
 fill_square([X,Y],Player):-
 	%write('\n square : '), write([X,Y]),write('\n'),
-	NewX is X,
-	NewY is Y,
+	NewX is X+0.25,
+	NewY is Y+0.25,
 	width_board(W),
 	height_board(H),
 	screen_w(WW),
