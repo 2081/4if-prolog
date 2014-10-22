@@ -1,13 +1,25 @@
+%-----------User interface gestion --------%
+%--All needed procedure to create an xpce--%
+%--interface are included in this file-----%
+
+%--Declaration des faits dynamiques--------%
 :- dynamic screen_w/1 .
 :- dynamic screen_h/1 .
 :- dynamic created/0 .
 :- dynamic newWindow/0 .
 
+%--Fait utilisé afin de gérer la fenêtre---%
+%--déjà existante--------------------------%
 :-assert(newWindow).
 
 %width_board(5).
 %height_board(5).
 
+%--Procédure de gestion d'une fenêtre déjà-%
+%--existante, avec ajout d'un nouvel-------%
+%--element picture à la bonne taille-------%
+%--parametres: Width=largeur de la fenêtre-%
+%--------------Height=hauteur de la fenêtre%
 create_Display(Width,Height):-
 	created,
 	assert(screen_w(Width)),
@@ -17,6 +29,11 @@ create_Display(Width,Height):-
 	send(@p,size, size(PictWidth,PictHeight)),
 	send(@p, flush).
 
+%--Procédure de création d'une fenêtre----%
+%--avec assert et retract des faits-------%
+%--de gestion de fenêtre-------------------%
+%--parametres: Width=largeur de la fenêtre-%
+%--------------Height=hauteur de la fenêtre%
 create_Display(Width,Height):-
 	newWindow,
 	assert(screen_w(Width)),
@@ -28,7 +45,12 @@ create_Display(Width,Height):-
 	send(@d, open),
 	retract(newWindow),
 	assert(created).
-	
+
+%--Procedures create_display---------------%
+%--Procedures utilisees pour determiner la-%
+%--taille de la future fenetre en prenant--%
+%--en parametre la taille max d'un cote----%
+%--Parametre: Size= taille max d'un cote---%	
 create_display(Size):-
 	width_board(W),
 	height_board(H),
@@ -50,7 +72,16 @@ create_display(Size):-
 	height_board(H),
 	W==H,
 	create_Display(Size,Size).
-	
+
+%--Procedures screen-line------------------%
+%--Procedures utilisées pour déterminer les%
+%--coordonnees de la future ligne a tracer-%
+%--Parametres: [X,Y]=coordonnees du centre-%
+%--de la ligne-----------------------------%
+%-------------FX,FY=coordonnees du premier-%
+%--point formant la ligne------------------%
+%-------------LX,LY=coordonnees du second--%
+%--point formant la ligne------------------%
 screen_line([X,Y],FX,FY,LX,LY):-
 	horizontal([X,Y]),
 	FX is X,
@@ -65,6 +96,11 @@ screen_line([X,Y],FX,FY,LX,LY):-
 	LX is X+0.5,
 	LY is Y+1.0.
 
+	
+%--Procedure permettant de tracer les lignes%
+%--Parametres: Pos: liste contenant les-----%
+%--coordonnees du centre de la ligne a------%
+%--a tracer---------------------------------%
 draw_line(Pos):-
 	screen_line(Pos,FirstX,FirstY,SecondX,SecondY),
 	width_board(W),
@@ -75,7 +111,13 @@ draw_line(Pos):-
 	FactorY is HH/H,
 	send(@p,display,new(Li,line(FirstX*FactorX,FirstY*FactorY,SecondX*FactorX,SecondY*FactorY,none))),
 	send(Li,flush).
-	
+
+%%--Procedure permettant de dessiner un----%
+%--carre dont la couleur sera recuperee----%
+%--grace a la procedure square_color-------%
+%--Parametres: [X,Y]= coordonnees du point-%
+%--haut-gauche du carre a dessiner---------%
+%--------------Player= joueur actuel-------%	
 fill_square([X,Y],Player):-
 	%write('\n square : '), write([X,Y]),write('\n'),
 	NewX is X,
@@ -90,10 +132,15 @@ fill_square([X,Y],Player):-
 	square_color(C,Player),
 	send(Sq,fill_pattern,colour(C)),
 	send(Sq,flush).
-	
+
+%--Definissions des predicats donnant la---%
+%--couleur d'un carre a remplir------------%	
 square_color(red,ai).
 square_color(blue,user).
 
+%--Procedure permettant de liberer les-----%
+%--donnees necessaires a la creation d'une-%
+%--nouvelle 'picture':element de la fenetre%
 close_ui:-
 	free(@p),
 	retract(screen_w(_)),
