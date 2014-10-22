@@ -100,11 +100,11 @@ update_player(TurnScore):-
 	print_update_player(TurnScore).
 
 print_update_player(TurnScore) :-
-	player(X).
-/*	write(X),
+	player(X)/*,
+	write(X),
 	write(' filled '),
 	write(TurnScore),
-	write(' box(es).\n').*/
+	write(' box(es).\n')*/.
 
 /*
 	Artificial intelligence
@@ -154,6 +154,8 @@ play :-
 	player(Player),
 	play(Player, Line),
 	close_count(Line,Count),
+	%write('Count : '),write(Count),write('\n'),
+	%write('Coups joués : '),findall(X,played(X),Xs),write(Xs),write('\n'),
 	update_score(Player,Count),
 	free_lines(F),
 	element(Line, F, R),
@@ -161,7 +163,7 @@ play :-
 	assert(free_lines(R)),
 	assert(played(Line)),
 	update_player(Count),
-	draw_line(Line),
+	draw_line(Line,Player),
 	draw_cases(Line,Player,Count),
 	%sleep(0.005),
 	%write('----------------------\n'),
@@ -209,7 +211,12 @@ init_game:-
 	assert(score(ai,0)),
 	assert(score(user,0)),
 	consult('plateau.pl'),
-	create_display(400).
+	create_display(400),
+	free_lines(X),
+	draft_lines(X).
+	
+draft_lines([]).
+draft_lines([H|T]):- draft_line(H), draft_lines(T).
 	
 clear_game:-
 	retract(player(_)),
