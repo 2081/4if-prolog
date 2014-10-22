@@ -10,8 +10,10 @@ simple_ai(Line) :-
 simple_ai(Line) :-
 	simple_ai(Line,1),!.
 simple_ai(Line) :-
-	simple_ai(Line,0),
-	not(critical(Line)), !.	
+	findall(L,(simple_ai(L,0),not(critical(L))),Lines),
+	length(Lines,N),
+	random(1,N,R),
+	nth1(R,Lines,Line),!.
 simple_ai(Line) :-
 	simple_ai(Line,0),!.
 
