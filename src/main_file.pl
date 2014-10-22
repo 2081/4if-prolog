@@ -165,7 +165,7 @@ play :-
 	update_player(Count),
 	draw_line(Line,Player),
 	draw_cases(Line,Player,Count),
-	%sleep(0.005),
+	sleep(0.01),
 	%write('----------------------\n'),
 	play,
 	!.
@@ -175,6 +175,8 @@ play :-
 	write('Game Over\n'),
 	score(ai,AI),
 	score(user,US),
+	analytics_stream(Stream),
+	write(Stream,AI), write(Stream,'\t'),write(Stream,US),write(Stream,'\n'),
 	write('AI : '),write(AI),
 	write('\nYou : '),write(US),write('\n'),
 	print_end(AI,US),!.
@@ -204,6 +206,7 @@ update_score(Player,Score):- score(Player,N), M is N + Score, retract(score(Play
 :- dynamic player/1 .
 :- dynamic width_board/1 .
 :- dynamic height_board/1 .
+:- dynamic analytics_stream/1 .
 
 /* INIT */
 init_game:-
@@ -213,7 +216,9 @@ init_game:-
 	consult('plateau.pl'),
 	create_display(400),
 	free_lines(X),
-	draft_lines(X).
+	draft_lines(X),
+	open('analytics/analytics.txt',append,Stream),
+	assert(analytics_stream(Stream)).
 	
 draft_lines([]).
 draft_lines([H|T]):- draft_line(H), draft_lines(T).
@@ -226,6 +231,9 @@ clear_game:-
 	retractall(played(_)),
 	retract(width_board(_)),
 	retract(height_board(_)),
+	analytics_stream(Stream),
+	close(Stream),
+	retract(analytics_stream(_)),
 	close_ui.
 
 restart_game:- clear_game, init_game, play.
