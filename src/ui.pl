@@ -35,17 +35,17 @@ create_display(Size):-
 	
 screen_line([X,Y],FX,FY,LX,LY):-
 	horizontal([X,Y]),
-	FX is X+0.5,
-	FY is Y+1.0,
-	LX is X+1.5,
-	LY is Y+1.0.
+	FX is X,
+	FY is Y+0.5,
+	LX is X+1.0,
+	LY is Y+0.5.
 
 screen_line([X,Y],FX,FY,LX,LY):-
 	vertical([X,Y]),
-	FX is X+1.0 ,
-	FY is Y+0.5 ,
-	LX is X+1.0,
-	LY is Y+1.5.
+	FX is X+0.5 ,
+	FY is Y ,
+	LX is X+0.5,
+	LY is Y+1.0.
 
 draw_line(Pos):-
 	screen_line(Pos,FirstX,FirstY,SecondX,SecondY),
@@ -59,9 +59,9 @@ draw_line(Pos):-
 	send(Li,flush).
 	
 fill_square([X,Y],Player):-
-	write('\n square : '), write([X,Y]),write('\n'),
-	NewX is X+0.5,
-	NewY is Y+0.5,
+	%write('\n square : '), write([X,Y]),write('\n'),
+	NewX is X,
+	NewY is Y,
 	width_board(W),
 	height_board(H),
 	screen_w(WW),
@@ -70,7 +70,13 @@ fill_square([X,Y],Player):-
 	FactorY is HH/H,
 	send(@p,display,new(Sq,box(FactorX,FactorY)),point(NewX*FactorX,NewY*FactorY)),
 	square_color(C,Player),
-	send(Sq,fill_pattern,colour(C)).
+	send(Sq,fill_pattern,colour(C)),
+	send(Sq,flush).
 	
 square_color(red,ai).
 square_color(blue,user).
+
+close_ui:-
+	free(@p),
+	retract(screen_w(_)),
+	retract(screen_h(_)).
