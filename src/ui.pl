@@ -96,16 +96,8 @@ screen_line([X,Y],FX,FY,LX,LY):-
 	LX is X+0.5,
 	LY is Y+1.0.
 
-<<<<<<< HEAD
-	
-%--Procedure permettant de tracer les lignes%
-%--Parametres: Pos: liste contenant les-----%
-%--coordonnees du centre de la ligne a------%
-%--a tracer---------------------------------%
+%--Vieille fonction plus utilisée----------%
 draw_line(Pos):-
-=======
-/*draw_line(Pos):-
->>>>>>> origin/master
 	screen_line(Pos,FirstX,FirstY,SecondX,SecondY),
 	width_board(W),
 	height_board(H),
@@ -114,18 +106,16 @@ draw_line(Pos):-
 	FactorX is WW/W,
 	FactorY is HH/H,
 	send(@p,display,new(Li,line(FirstX*FactorX,FirstY*FactorY,SecondX*FactorX,SecondY*FactorY,none))),
-<<<<<<< HEAD
 	send(Li,flush).
 
-%%--Procedure permettant de dessiner un----%
-%--carre dont la couleur sera recuperee----%
-%--grace a la procedure square_color-------%
-%--Parametres: [X,Y]= coordonnees du point-%
-%--haut-gauche du carre a dessiner---------%
-%--------------Player= joueur actuel-------%	
-=======
-	send(Li,flush).*/
-	
+%--Procedure permettant de tracer les lignes%
+%--en couleur (celles jouees par les joueurs%
+%--Ici la ligne tracee est une 'box', ceci--%
+%--afin de pouvoir les colorier et de-------%
+%--pouvoir cliquer dessus-------------------%
+%--Parametres: [X,Y]= coordonnees du point--%
+%--haut-gauche du carre a dessiner----------%
+%--------------Player= joueur actuel--------%
 draw_line([X,Y],Player):-
 	screen_line([X,Y],FirstX,FirstY,SecondX,SecondY),
 	width_board(W),
@@ -136,7 +126,6 @@ draw_line([X,Y],Player):-
 	FactorY is HH/H,
 	BW is  max(integer((SecondX-FirstX)*FactorX+1),5),
 	BH is  max(integer((SecondY-FirstY)*FactorY+1),5),
-	
 	BX is (X+0.75)*FactorX - BW/2,
 	BY is (Y+0.75)*FactorY - BH/2,
 	%write(BX),write(' '),write(BY),not(true),
@@ -145,6 +134,13 @@ draw_line([X,Y],Player):-
 	send(Sq,fill_pattern,colour(C)),
 	send(Sq,flush).
 
+%--Procedure permettant de tracer les lignes%
+%--grises de depart (les jouables)----------%
+%--Ici la ligne tracee est une 'box', ceci--%
+%--afin de pouvoir les colorier et de-------%
+%--pouvoir cliquer dessus-------------------%
+%--Parametre: [X,Y]= coordonnees du point--%
+%--haut-gauche du carre a dessiner----------%
 draft_line([X,Y]):-
 	screen_line([X,Y],FirstX,FirstY,SecondX,SecondY),
 	width_board(W),
@@ -163,7 +159,12 @@ draft_line([X,Y]):-
 	send(Sq,fill_pattern,colour(gray)),
 	send(Sq,flush).
 	
->>>>>>> origin/master
+%%--Procedure permettant de dessiner un----%
+%--carre dont la couleur sera recuperee----%
+%--grace a la procedure square_color-------%
+%--Parametres: [X,Y]= coordonnees du point-%
+%--haut-gauche du carre a dessiner---------%
+%--------------Player= joueur actuel-------%	
 fill_square([X,Y],Player):-
 	%write('\n square : '), write([X,Y]),write('\n'),
 	NewX is X+0.25,
