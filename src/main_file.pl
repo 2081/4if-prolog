@@ -7,6 +7,10 @@ element(X,[X|R],R).
 element(X2,[T|Q],[T|R2]):-
 	element(X2,Q,R2).
 
+/* dynamic variables declaration */
+:- dynamic free_lines/1.
+:- dynamic played/1.
+
 direction([X,Y],[U,V],west):-
 	U is X-1.0,
 	V is Y.
@@ -81,6 +85,7 @@ critical(Pos) :- neighbours(Pos,_,2).
 	
 	
 
+:- dynamic player/1.
 
 update_player(TurnScore) :-
 	TurnScore == 0,
@@ -100,16 +105,18 @@ update_player(TurnScore):-
 	print_update_player(TurnScore).
 
 print_update_player(TurnScore) :-
-	player(X).
-/*	write(X),
+	player(X),
+	write(X),
 	write(' filled '),
 	write(TurnScore),
-	write(' box(es).\n').*/
+	write(' box(es).\n').
 
 /*
 	Artificial intelligence
 */
-%
+
+%:- dynamic ai_play/1 .
+
 /*
  UI handler
 */
@@ -131,7 +138,9 @@ draw_cases_dir([X,Y],Player, bottom):-
 	YY is Y+0.5,
 	fill_square([X,YY],Player).
 draw_cases_dir([X,Y],Player,right):-
+	print('Hey'),
 	close_square([X,Y],left),
+	print('Ho'),
 	XX is X+0.5,
 	fill_square([XX,Y],Player).
 draw_cases_dir([X,Y],Player, left):-
@@ -144,11 +153,15 @@ draw_cases_dir([X,Y],Player, left):-
 */
 
 
+:- dynamic p1_play/1 .
+:- dynamic p2_play/1 .
+
+
 play(ai,L) :-
-	p1_play(L).%,write('Computer : '),write(L),write('\n').
+	p1_play(L),write('Computer : '),write(L),write('\n').
 	
 play(user,L) :-
-	p2_play(L).%,write('User : '),write(L),write('\n').
+	p2_play(L),write('User : '),write(L),write('\n').
 
 play :- 
 	player(Player),
@@ -163,8 +176,8 @@ play :-
 	update_player(Count),
 	draw_line(Line),
 	draw_cases(Line,Player,Count),
-	%sleep(0.005),
-	%write('----------------------\n'),
+	sleep(0.05),
+	write('----------------------\n'),
 	play,
 	!.
 play :-
@@ -187,48 +200,27 @@ print_end(AI,US) :-
 
 print_end(AI,US) :-
 	AI == US,
-	write('Just because you didn\'t loose, doesn\'t mean you won !\n').
+	write('Just because you didn\'t loose, doesn\'t mean you won !').
 
 
+:- dynamic score/2.
 update_score(Player,Score):- score(Player,N), M is N + Score, retract(score(Player,_)), assert(score(Player,M)).
 
-
-/* dynamic variables declaration */
-:- dynamic free_lines/1 .
-:- dynamic played/1 .
-:- dynamic score/2 .
-:- dynamic p1_play/1 .
-:- dynamic p2_play/1 .
-:- dynamic player/1 .
-:- dynamic centers/1 .
-:- dynamic width_board/1 .
-:- dynamic height_board/1 .
-
 /* INIT */
-init_game:-
-	assert(player(ai)),
-	assert(score(ai,0)),
-	assert(score(user,0)),
-	consult('plateau.pl'),
-	create_display(400).
-	
-clear_game:-
-	retract(player(_)),
-	retract(score(ai,_)),
-	retract(score(user,_)),
-	retract(free_lines(_)),
-	retractall(played(_)),
-	retract(centers(_)),
-	retract(width_board(_)),
-	retract(height_board(_)),
-	close_ui.
-
-restart_game:- clear_game, init_game, play.
+:-
+	assert(player(ai)).
+/*:- 
+	assert(free_lines([[-0.5,0.0],[0.0,-0.5],[0.0,0.5],[1.0,-0.5],[1.0,0.5],[1.5,0.0],[0.5,0.0]])).*/
+:-
+	assert(score(ai,0)), assert(score(user,0)).
 
 :-
+	consult('plateau.pl').
+:-
 	consult('ui.pl').
-:- init_game.
 	
+:-
+	create_display(400).
 /*
 :-
 	play,play,play,play,play,play,play.
