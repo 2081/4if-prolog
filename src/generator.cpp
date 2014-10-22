@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	if(argc>1) nomFichier=argv[1];
 	else nomFichier="plateau.txt";
 	entree.open(nomFichier.c_str());
-	sortie.open((nomFichier.substr(0,nomFichier.find('.'))+".pl").c_str());
+	sortie.open("plateau.pl");
 	char** carte;
 	int largeurCarte,hauteurCarte;
 	string points_list="free_lines([";
@@ -77,4 +77,3 @@ int main(int argc, char** argv)
 	sortie.close();
 	return 0;
 }
-
