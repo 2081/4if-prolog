@@ -10,7 +10,6 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	set<pair<double,double> > points;
-	set<pair<int,int> > centres;
 	ifstream entree;
 	ofstream sortie;
 	string ligneCourante;
@@ -49,7 +48,6 @@ int main(int argc, char** argv)
 		{
 			if(carte[i][j]=='.')
 			{
-				centres.insert(make_pair(i,j));
 				points.insert(make_pair(i-0.5,j));
 				points.insert(make_pair(i+0.5,j));
 				points.insert(make_pair(i,j-0.5));
@@ -58,14 +56,8 @@ int main(int argc, char** argv)
 			}
 		}
 	}
-	sortie<<fixed<<"centers([["<<setprecision(1)<<(centres.begin())->first<<","<<(centres.begin())->second<<"]";
-	for(set<pair<int,int> >::iterator iCentre = ++centres.begin();iCentre!=centres.end();iCentre++)
-	{
-		sortie<<",["<<iCentre->first<<","<<iCentre->second<<"]";
-	}
-	sortie<<"])."<<endl;
 
-	sortie<<"free_lines([["<<(points.begin())->first<<","<<(points.begin())->second<<"]";
+	sortie<<fixed<<setprecision(1)<<"free_lines([["<<(points.begin())->first<<","<<(points.begin())->second<<"]";
 	for(set<pair<double,double> >::iterator iCentre = ++points.begin();iCentre!=points.end();iCentre++)
 	{
 		sortie<<",["<<iCentre->first<<","<<iCentre->second<<"]";

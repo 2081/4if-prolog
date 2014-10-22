@@ -200,7 +200,6 @@ update_score(Player,Score):- score(Player,N), M is N + Score, retract(score(Play
 :- dynamic p1_play/1 .
 :- dynamic p2_play/1 .
 :- dynamic player/1 .
-:- dynamic centers/1 .
 :- dynamic width_board/1 .
 :- dynamic height_board/1 .
 
@@ -218,7 +217,6 @@ clear_game:-
 	retract(score(user,_)),
 	retract(free_lines(_)),
 	retractall(played(_)),
-	retract(centers(_)),
 	retract(width_board(_)),
 	retract(height_board(_)),
 	close_ui.
