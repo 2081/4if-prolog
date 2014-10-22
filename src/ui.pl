@@ -1,16 +1,34 @@
 :- dynamic screen_w/1 .
 :- dynamic screen_h/1 .
+:- dynamic created/0 .
+:- dynamic newWindow/0 .
+
+:-assert(newWindow).
 
 %width_board(5).
 %height_board(5).
 
 create_Display(Width,Height):-
+	created,
 	assert(screen_w(Width)),
 	assert(screen_h(Height)),
-	new(@p, picture('Dots and Boxes - H4104')),
-	send(@p,size, size(Width,Height)),
-	send(@p, open).
+	send(@d, append, new(@p, picture('Dots and Boxes - H4104'))),
+	PictWidth is Width+20, PictHeight is Height+20,
+	send(@p,size, size(PictWidth,PictHeight)),
+	send(@p, flush).
 
+create_Display(Width,Height):-
+	newWindow,
+	assert(screen_w(Width)),
+	assert(screen_h(Height)),
+	new(@d, dialog('Demo prolog')),
+	send(@d, append, new(@p, picture('Dots and Boxes - H4104'))),
+	WindowWidth is Width+20, WindowHeight is Height+20,
+	send(@p,size, size(WindowWidth,WindowHeight)),
+	send(@d, open),
+	retract(newWindow),
+	assert(created).
+	
 create_display(Size):-
 	width_board(W),
 	height_board(H),
