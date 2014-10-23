@@ -1,25 +1,28 @@
 :- dynamic ai_play/1 .
 			
 				
-:-	consult('greedy_ai.pl'),consult('random_ai.pl').
+:-	consult('minmax_ai.pl'),consult('simple_ai.pl').
 :-	retractall(p1_play(_)),
-	assert(p1_play(L):- greedy_ai(L)),
+	assert(p1_play(L):- simple_ai(L)),
 	retractall(p2_play(_)),
-	assert(p2_play(L):- random_ai(L)).
+	assert(p2_play(L):- minmax_ai(L)).
 
 contest(N):-
 	N > 0,
+	init_minmax_ai,
 	start,
 	contest_score,
 	M is N-1,
 	recontest(M),
 	write('Player 1 : '),cscore(p1,S1),write(S1),write('\n'),
 	write('Player 2 : '),cscore(p2,S2),write(S2),write('\n'),
-	write('Null     : '),S0 is N - S1 - S2, write(S0), write('\n').
+	write('Null     : '),S0 is N - S1 - S2, write(S0), write('\n'),!.
 
 recontest(0).
 recontest(N):-
 	N > 0,
+	clear_minmax_ai,
+	init_minmax_ai,
 	restart_game,
 	contest_score,
 	M is N-1,
